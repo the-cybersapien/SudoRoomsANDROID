@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -26,7 +28,6 @@ public class MainActivity extends Activity {
     private Button mCustomerButton;
     private String text;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,39 +54,44 @@ public class MainActivity extends Activity {
         mCustomerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-//                builder.setTitle("Access Key");
-//                text = "";
-//
-//                Log.v("MainActivity : ", "Builder created");
-//                final EditText input = new EditText(getApplicationContext());
-//                input.setInputType(InputType.TYPE_CLASS_TEXT);
-//                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        text = input.getText().toString();
-//                    }
-//                });
-//
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                builder.show();
-//
-//                if(text != null && text.length() > 0)
-//                {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_AlertDialog);
+                builder.setTitle("Access Key");
+                text = "";
+
+                Log.v("MainActivity : ", "Builder created");
+                final EditText input = new EditText(MainActivity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                input.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                builder.setView(input);
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        text = input.getText().toString();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.create().show();
+
+                if(text != null && text.length() > 0)
+                {
                     Intent intent = new Intent(MainActivity.this , RoomDetailsActivity.class);
                     startActivity(intent);
-                //}
+                }
 
             }
         });
 
-        mHotelImage.setAlpha(135);
+        mHotelImage.setAlpha(0.527f);
         Picasso.with(this).load("http://top10hotelbookingsites.webs.com/besthotelsites-1.jpg").into(mHotelImage);
         Picasso.with(this).load(R.drawable.customer).into(mCustomerImage);
         Picasso.with(this).load(R.drawable.staff).into(mStaffImage);
