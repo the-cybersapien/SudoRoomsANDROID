@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.example.android.hotel.MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/hotel_image_main"
+        android:adjustViewBounds="true"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/hotel_image_main"
+        android:id="@+id/blank"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/main_content_container"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_margin="20dp"
+                android:id="@+id/staff_image"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Staff"
+                android:id="@+id/staff_button"
+                android:layout_below="@id/staff_image"
+                android:textAlignment="center"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="#BDBDBD">
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:id="@+id/customer_image"
+                android:layout_margin="20dp"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="10dp"
+                android:textAlignment="center"
+                android:id="@+id/customer_button"
+                android:layout_below="@id/customer_image"
+                android:text="Customer"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@id/blank"
+        android:text="Hotel Plaza"
+        android:textColor="#FFFFFF"
+        android:textSize="50sp"/>
+
+</RelativeLayout>

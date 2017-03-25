@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/staff_item_container"
+    android:background="#313945"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:text="342"
+        android:textSize="25sp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:id="@+id/room_no_staff_list"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:id="@+id/name_staff_list"
+        android:padding="10dp"
+        android:text="Hello"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif"
+        android:gravity="center_vertical"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:background="#76FF03"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_check"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
