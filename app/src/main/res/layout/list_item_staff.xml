@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/staff_item_container"
-    android:background="#313945"
+    android:background="#0B3B4B"
+    android:foreground="?android:selectableItemBackground"
     android:orientation="horizontal">
 
     <TextView
         android:layout_width="0dp"
         android:layout_weight="1"
         android:text="342"
-        android:textSize="25sp"
+        android:gravity="center_vertical"
+        android:textSize="28sp"
         android:padding="10dp"
         android:textAlignment="center"
         android:id="@+id/room_no_staff_list"
@@ -25,20 +27,21 @@
         android:textSize="30sp"
         android:fontFamily="sans-serif"
         android:gravity="center_vertical"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_weight="1"
         android:background="#76FF03"
-        android:padding="10dp"
+        android:layout_margin="10dp"
         android:gravity="center_vertical"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/status_image"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:src="@drawable/ic_check"
+            android:src="@drawable/ic_action_tick"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>

@@ -8,11 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.name;
 import static android.R.attr.resource;
 
 /**
@@ -27,7 +31,7 @@ public class DetailAdapter extends ArrayAdapter<RoomDetail>{
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         View listItemView = convertView;
         if(listItemView == null)
@@ -35,6 +39,14 @@ public class DetailAdapter extends ArrayAdapter<RoomDetail>{
             listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_staff,parent,false);
         }
         RoomDetail currentItem = getItem(position);
+
+        ImageView status = (ImageView) listItemView.findViewById(R.id.status_image);
+        status.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), Integer.toString(position) , Toast.LENGTH_SHORT).show();
+            }
+        });
 
         TextView name = (TextView) listItemView.findViewById(R.id.name_staff_list);
         name.setText(currentItem.getName());

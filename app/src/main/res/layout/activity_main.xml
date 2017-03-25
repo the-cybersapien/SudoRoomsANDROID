@@ -29,6 +29,8 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:foreground="?android:selectableItemBackground"
+            android:background="?android:selectableItemBackground"
             android:layout_height="match_parent">
 
 
@@ -61,6 +63,7 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:foreground="?android:selectableItemBackground"
             android:layout_height="match_parent">
 
             <ImageView

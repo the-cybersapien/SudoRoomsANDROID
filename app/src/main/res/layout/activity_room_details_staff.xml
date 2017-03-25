@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="#0B3B4B"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.hotel.RoomDetailsActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/room_image"
+        android:adjustViewBounds="true"/>
+
+    <ImageView
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:adjustViewBounds="true"
+        android:id="@+id/oval"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:text="345"
+        android:padding="10dp"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_below="@id/oval"
+        android:layout_height="3dp"
+        android:background="#212121"
+        android:id="@+id/line"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line"
+        android:text="Aditya Aggarval"
+        android:textSize="20sp"
+        android:id="@+id/detail_name"
+        android:textColor="#E0E0E0"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_name"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <at.markushi.ui.CircleButton
+                android:layout_width="128dip"
+                android:layout_height="128dip"
+                android:src="@drawable/ic_action_tick"
+                app:cb_color="#D81B60"
+                android:layout_gravity="center"
+                app:cb_pressedRingWidth="16dip"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent">
+
+            <at.markushi.ui.CircleButton
+                android:layout_width="128dip"
+                android:layout_height="128dip"
+                android:src="@drawable/ic_action_tick"
+                app:cb_color="#99CC00"
+                android:layout_gravity="center"
+                app:cb_pressedRingWidth="16dip"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
