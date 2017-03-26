@@ -30,9 +30,7 @@ import java.net.URL;
 
 import at.markushi.ui.CircleButton;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.util.Log.v;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 import static com.example.android.hotel.MainActivity.editor;
 import static com.example.android.hotel.MainActivity.pref;
 
@@ -53,7 +51,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private TextView name_text_view;
     private TextView room_text_view;
     private Button logout;
+    private Button emergency;
     private int flag = 1;
+    private String caller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,39 +65,53 @@ public class RoomDetailsActivity extends AppCompatActivity {
         //Log.v("RoomDetailsActivity : ", received_key);
         if ((received_key = intent.getStringExtra("key")) != null) {
             radioGroup.setVisibility(View.GONE);
+            caller = "C";
             setContentView(R.layout.activity_room_details);
             logout = (Button) findViewById(R.id.logout_button);
+            emergency = (Button) findViewById(R.id.emergency_button);
             new StringAsyncTask().execute();
+
+            emergency.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + 100));
+                    startActivity(intent);
+                }
+            });
 
             logout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    editor.remove("access-key");
+                    editor.clear();
                     editor.apply();
-                    Intent back = new Intent(RoomDetailsActivity.this , MainActivity.class);
+                    Intent back = new Intent(RoomDetailsActivity.this, MainActivity.class);
                     startActivity(back);
                 }
             });
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                    switch(radioGroup.getCheckedRadioButtonId())
-                    {
-                        case R.id.yes : Snackbar bar = Snackbar.make(detailsMain , "Room Service Ordered",Snackbar.LENGTH_LONG);
+                    switch (radioGroup.getCheckedRadioButtonId()) {
+                        case R.id.yes:
+                            Snackbar bar = Snackbar.make(detailsMain, "Room Service Ordered", Snackbar.LENGTH_LONG);
                             bar.show();
-                            v("RoomDetailsActivity : ","yes");
+                            v("RoomDetailsActivity : ", "yes");
                             break;
-                        case R.id.no : v("RoomDetailsActivity : ","NO");
+                        case R.id.no:
+                            v("RoomDetailsActivity : ", "NO");
                             break;
-                        case R.id.na : Log.v("RoomDetailsActivity : ","NA");
+                        case R.id.na:
+                            Log.v("RoomDetailsActivity : ", "NA");
                             break;
-                        default : Toast.makeText(RoomDetailsActivity.this, "Something Wrong!", Toast.LENGTH_SHORT).show();
+                        default:
+                            Toast.makeText(RoomDetailsActivity.this, "Something Wrong!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
         } else {
             setContentView(R.layout.activity_room_details_staff);
+            caller = "S";
             room_text_view = (TextView) findViewById(R.id.customer_room_no);
             name_text_view = (TextView) findViewById(R.id.detail_name);
             received_name = intent.getStringExtra("Name");
@@ -115,17 +129,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(flag == 1)
-                {
+                if (flag == 1) {
                     customerStatus.setColor(getResources().getColor(R.color.locked));
-                    new RequestAccessAsyncTask().execute("04", "CLOSE");
+                    new RequestAccessAsyncTask().execute(pref.getString("roomNo", null), "CLOSE");
                     flag = 0;
-                }
-                else
-                {
+                } else {
                     customerStatus.setColor(getResources().getColor(R.color.unlocked));
-                    Log.v("a ",Integer.toString(flag));
-                    new RequestAccessAsyncTask().execute("04", "OPEN");
+                    new RequestAccessAsyncTask().execute(pref.getString("roomNo", null), "OPEN");
                     flag = 1;
                 }
             }
@@ -193,8 +203,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private class StringAsyncTask extends AsyncTask<Void, Void , String>
-    {
+    private class StringAsyncTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -211,12 +220,10 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
                 StringBuilder builder = new StringBuilder();
 
-                while ((line = reader1.readLine()) != null){
+                while ((line = reader1.readLine()) != null) {
                     builder.append(line);
                 }
-
                 line = builder.toString();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -235,8 +242,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 TextView name = (TextView) findViewById(R.id.detail_name);
                 roomno.setText(room);
                 name.setText(name_result);
-                editor.putString("roomNo",room);
-                editor.putString("name",name_result);
+                editor.putString("roomNo", room);
+                editor.putString("name", name_result);
                 editor.apply();
             } catch (JSONException e) {
                 e.printStackTrace();
