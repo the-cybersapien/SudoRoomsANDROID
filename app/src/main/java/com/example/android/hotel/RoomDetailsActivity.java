@@ -74,7 +74,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
             emergency.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + 100));
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + 100));
                     startActivity(intent);
                 }
             });
@@ -147,6 +147,58 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         //Picasso.with(this).load(R.drawable.close).into(customerStatus);
 
+    }
+
+    private class StaffRequestAsyncTask extends AsyncTask<String,Void,Void>{
+
+
+        public static final String URL_QUERY =  "https://cybersapien:0b83f4803c68e21290f19eb534d9b427937db916@twilix.exotel.in/v1/Accounts/cybersapien/Calls/connect";
+
+        @Override
+        protected Void doInBackground(String... params) {
+            if(params[0].isEmpty() || params[1].isEmpty() || params[2].isEmpty())
+                return null;
+
+            Uri query = Uri.parse(URL_QUERY)
+                    .buildUpon()
+                    .appendQueryParameter("From",params[0])
+                    .appendQueryParameter("CallerId","08039511264")
+                    .appendQueryParameter("CallType", "trans")
+                    .appendQueryParameter("Uri" , "http://my.exptel.in/exoml/start/128387")
+                    .build();
+
+            URL url = createURL(query.toString());
+            int responce = 0;
+            HttpURLConnection connection = null;
+            if(url != null)
+            {
+                try {
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setReadTimeout(15000);
+                    connection.setConnectTimeout(10000);
+                    connection.connect();
+
+                    responce = connection.getResponseCode();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (responce == 200 && params[1].equalsIgnoreCase("OPEN")) {
+                    Log.d("A", "doInBackground: SUCCESS");
+//                    Toast.makeText(RoomDetailsActivity.this, "Success! Opening Door now!", Toast.LENGTH_SHORT).show();
+                } else if (responce == 200 && params[1].equals("CLOSE")) {
+                    Log.d("A", "doInBackground: SUCCESS CLOSED");
+//                    Toast.makeText(RoomDetailsActivity.this, "Success! Closing Door now!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("A", "doInBackground: SFA");
+//                    Toast.makeText(RoomDetailsActivity.this, "Error! Try Again", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            return null;
+        }
     }
 
     private class RequestAccessAsyncTask extends AsyncTask<String, Void, Void> {
@@ -251,7 +303,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         }
     }
-
 
     private URL createURL(String x) {
         try {
