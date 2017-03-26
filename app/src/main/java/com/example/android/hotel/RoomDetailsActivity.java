@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -29,7 +30,11 @@ import java.net.URL;
 
 import at.markushi.ui.CircleButton;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.util.Log.v;
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static com.example.android.hotel.MainActivity.editor;
+import static com.example.android.hotel.MainActivity.pref;
 
 public class RoomDetailsActivity extends AppCompatActivity {
 
@@ -37,8 +42,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private ImageView oval;
     private String received_key;
     private CircleButton customerStatus;
-    private FrameLayout requestCircle;
-    private FrameLayout customerCircle;
     private RadioGroup radioGroup;
     private View detailsMain;
     private String URL_MAIN = "http://192.168.2.214/sudorooms/customer/validateaccess.php?key=";
@@ -49,6 +52,8 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private String received_room;
     private TextView name_text_view;
     private TextView room_text_view;
+    private Button logout;
+    private int flag = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +61,23 @@ public class RoomDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room_details);
         radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         Intent intent = getIntent();
-        received_key = intent.getStringExtra("key");
-        if (received_key != null) {
+        //received_key = intent.getStringExtra("key");
+        //Log.v("RoomDetailsActivity : ", received_key);
+        if ((received_key = intent.getStringExtra("key")) != null) {
             radioGroup.setVisibility(View.GONE);
             setContentView(R.layout.activity_room_details);
+            logout = (Button) findViewById(R.id.logout_button);
             new StringAsyncTask().execute();
 
+            logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editor.remove("access-key");
+                    editor.apply();
+                    Intent back = new Intent(RoomDetailsActivity.this , MainActivity.class);
+                    startActivity(back);
+                }
+            });
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -80,7 +96,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 }
             });
 
-
         } else {
             setContentView(R.layout.activity_room_details_staff);
             room_text_view = (TextView) findViewById(R.id.customer_room_no);
@@ -91,18 +106,28 @@ public class RoomDetailsActivity extends AppCompatActivity {
             room_text_view.setText(received_room);
             radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         }
+        //editor.putString("room",pref.getString("Room",null));
+        //editor.apply();
         mRoomImage = (ImageView) findViewById(R.id.room_image);
         detailsMain = findViewById(R.id.details_main);
         customerStatus = (CircleButton) findViewById(R.id.customer_status);
-        requestCircle = (FrameLayout) findViewById(R.id.customer_request_circle);
-        customerCircle = (FrameLayout) findViewById(R.id.customer_open_circle);
-        customerCircle.setOnClickListener(new View.OnClickListener() {
+        customerStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(customerCircle.getSolidColor() == getResources().getColor(R.color.unlocked))
-                    customerCircle.setBackgroundColor(getResources().getColor(R.color.locked));
+
+                if(flag == 1)
+                {
+                    customerStatus.setColor(getResources().getColor(R.color.locked));
+                    new RequestAccessAsyncTask().execute("04", "CLOSE");
+                    flag = 0;
+                }
                 else
-                    customerCircle.setBackgroundColor(getResources().getColor(R.color.unlocked));
+                {
+                    customerStatus.setColor(getResources().getColor(R.color.unlocked));
+                    Log.v("a ",Integer.toString(flag));
+                    new RequestAccessAsyncTask().execute("04", "OPEN");
+                    flag = 1;
+                }
             }
         });
         oval = (ImageView) findViewById(R.id.oval);
@@ -116,7 +141,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
     private class RequestAccessAsyncTask extends AsyncTask<String, Void, Void> {
 
-        public static final String QUERY_URL = "192.168.2.214/sudorooms/customer/request.php";
+        public static final String QUERY_URL = "http://192.168.2.214/sudorooms/customer/request.php";
 
         @Override
         protected Void doInBackground(String... params) {
@@ -151,12 +176,17 @@ public class RoomDetailsActivity extends AppCompatActivity {
                     urlConnection.disconnect();
                 }
 
+                Log.d("aa", "doInBackground: " + response);
+
                 if (response == 200 && params[1].equalsIgnoreCase("OPEN")) {
-                    Toast.makeText(RoomDetailsActivity.this, "Success! Opening Door now!", Toast.LENGTH_SHORT).show();
+                    Log.d("A", "doInBackground: SUCCESS");
+//                    Toast.makeText(RoomDetailsActivity.this, "Success! Opening Door now!", Toast.LENGTH_SHORT).show();
                 } else if (response == 200 && params[1].equals("CLOSE")) {
-                    Toast.makeText(RoomDetailsActivity.this, "Success! Closing Door now!", Toast.LENGTH_SHORT).show();
+                    Log.d("A", "doInBackground: SUCCESS CLOSED");
+//                    Toast.makeText(RoomDetailsActivity.this, "Success! Closing Door now!", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(RoomDetailsActivity.this, "Error! Try Again", Toast.LENGTH_SHORT).show();
+                    Log.d("A", "doInBackground: SFA");
+//                    Toast.makeText(RoomDetailsActivity.this, "Error! Try Again", Toast.LENGTH_SHORT).show();
                 }
             }
             return null;
@@ -197,7 +227,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.v("Activity" , s);
             try {
                 JSONObject main = new JSONObject(s);
                 String room = main.getString("Room");
@@ -206,6 +235,9 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 TextView name = (TextView) findViewById(R.id.detail_name);
                 roomno.setText(room);
                 name.setText(name_result);
+                editor.putString("roomNo",room);
+                editor.putString("name",name_result);
+                editor.apply();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

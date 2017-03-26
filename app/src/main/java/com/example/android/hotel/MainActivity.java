@@ -3,10 +3,10 @@ package com.example.android.hotel;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.content.SharedPreferences.Editor;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,6 +27,8 @@ public class MainActivity extends Activity {
     private Button mStaffButton;
     private Button mCustomerButton;
     private String text;
+    public static SharedPreferences pref;
+    public static Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +45,13 @@ public class MainActivity extends Activity {
         mStaffButton = (Button) findViewById(R.id.staff_button);
         mCustomerButton = (Button) findViewById(R.id.customer_button);
 
+        pref = getSharedPreferences("MyPref", 0);
+        editor = pref.edit();
+
         mStaffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent list = new Intent(MainActivity.this ,RoomListActivity.class);
+                Intent list = new Intent(MainActivity.this, RoomListActivity.class);
                 startActivity(list);
             }
         });
@@ -54,39 +59,49 @@ public class MainActivity extends Activity {
         mCustomerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_AlertDialog);
-                builder.setTitle("Access Key");
-                text = "";
+                // Check if an access key is already save in the shared preferences.
+                if (pref.getString("access-key", null) == null) {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppTheme_AlertDialog);
+                    builder.setTitle("Access Key");
+                    text = "";
 
-                Log.v("MainActivity : ", "Builder created");
-                final EditText input = new EditText(MainActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                    Log.v("MainActivity : ", "Builder created");
+                    final EditText input = new EditText(MainActivity.this);
+                    input.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                input.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    input.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-                builder.setView(input);
+                    builder.setView(input);
 
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        text = input.getText().toString();
-                        if(text != null && text.length() == 6)
-                        {
-                            Intent intent = new Intent(MainActivity.this , RoomDetailsActivity.class);
-                            intent.putExtra("key",text);
-                            startActivity(intent);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            text = input.getText().toString();
+                            if (!text.isEmpty() && text.length() == 6) {
+                                editor.putString("access-key", text);
+                                editor.apply();
+                                Intent intent = new Intent(MainActivity.this, RoomDetailsActivity.class);
+                                intent.putExtra("key", text);
+                                startActivity(intent);
+                            }
                         }
-                    }
-                });
+                    });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
 
-                builder.create().show();
+                    builder.create().show();
+                }
+                else
+                {
+                    Intent intent = new Intent(MainActivity.this, RoomDetailsActivity.class);
+                    intent.putExtra("key", pref.getString("access-key", null));
+                    startActivity(intent);
+                }
 
             }
         });
