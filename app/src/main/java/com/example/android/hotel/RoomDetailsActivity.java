@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private ImageView oval;
     private String received_key;
     private CircleButton customerStatus;
+    private CircleButton service_request;
     private RadioGroup radioGroup;
     private View detailsMain;
     private String URL_MAIN = "http://192.168.2.214/sudorooms/customer/validateaccess.php?key=";
@@ -70,7 +72,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
             logout = (Button) findViewById(R.id.logout_button);
             emergency = (Button) findViewById(R.id.emergency_button);
             new StringAsyncTask().execute();
-
             emergency.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,6 +125,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
         //editor.apply();
         mRoomImage = (ImageView) findViewById(R.id.room_image);
         detailsMain = findViewById(R.id.details_main);
+        service_request = (CircleButton) findViewById(R.id.request_servicing);
+        service_request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new StaffRequestAsyncTask().execute(pref.getString("mobile","0"));
+            }
+        });
         customerStatus = (CircleButton) findViewById(R.id.customer_status);
         customerStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,13 +164,13 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... params) {
-            if(params[0].isEmpty() || params[1].isEmpty() || params[2].isEmpty())
+            if(params[0].isEmpty())
                 return null;
 
             Uri query = Uri.parse(URL_QUERY)
                     .buildUpon()
                     .appendQueryParameter("From",params[0])
-                    .appendQueryParameter("CallerId","08039511264")
+                    .appendQueryParameter("CallerId","0809511264")
                     .appendQueryParameter("CallType", "trans")
                     .appendQueryParameter("Uri" , "http://my.exptel.in/exoml/start/128387")
                     .build();
@@ -184,17 +192,14 @@ public class RoomDetailsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                if (responce == 200 && params[1].equalsIgnoreCase("OPEN")) {
-                    Log.d("A", "doInBackground: SUCCESS");
-//                    Toast.makeText(RoomDetailsActivity.this, "Success! Opening Door now!", Toast.LENGTH_SHORT).show();
-                } else if (responce == 200 && params[1].equals("CLOSE")) {
-                    Log.d("A", "doInBackground: SUCCESS CLOSED");
-//                    Toast.makeText(RoomDetailsActivity.this, "Success! Closing Door now!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("A", "doInBackground: SFA");
-//                    Toast.makeText(RoomDetailsActivity.this, "Error! Try Again", Toast.LENGTH_SHORT).show();
+                if(responce == 200)
+                {
+                    Log.v("StaffRequest","SUCCESS");
                 }
-
+                else
+                {
+                    Log.v("StaffRequest" , "SUCCESS");
+                }
             }
 
             return null;
@@ -290,12 +295,18 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 JSONObject main = new JSONObject(s);
                 String room = main.getString("Room");
                 String name_result = main.getString("Name");
+                String cId =Integer.toString(main.getInt("CId")) ;
+                String mobile = main.getString("Mobile");
                 TextView roomno = (TextView) findViewById(R.id.customer_room_no);
                 TextView name = (TextView) findViewById(R.id.detail_name);
+                TextView id = (TextView) findViewById(R.id.id);
+                id.setText(cId);
                 roomno.setText(room);
                 name.setText(name_result);
                 editor.putString("roomNo", room);
                 editor.putString("name", name_result);
+                editor.putString("id",cId);
+                editor.putString("mobile",mobile);
                 editor.apply();
             } catch (JSONException e) {
                 e.printStackTrace();

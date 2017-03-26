@@ -26,7 +26,7 @@ public class RoomListActivity extends AppCompatActivity {
 
         roomList = new ArrayList<>();
         mRoomsList = (ListView) findViewById(R.id.rooms_list);
-        roomList.add(new RoomDetail("56","One"));
+        roomList.add(new RoomDetail("14","One"));
         roomList.add(new RoomDetail("57","Two"));
         roomList.add(new RoomDetail("58","Three"));
         roomList.add(new RoomDetail("59","Four"));
