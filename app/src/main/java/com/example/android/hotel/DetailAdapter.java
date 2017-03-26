@@ -40,13 +40,13 @@ public class DetailAdapter extends ArrayAdapter<RoomDetail>{
         }
         RoomDetail currentItem = getItem(position);
 
-        ImageView status = (ImageView) listItemView.findViewById(R.id.status_image);
-        status.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), Integer.toString(position) , Toast.LENGTH_SHORT).show();
-            }
-        });
+//        ImageView status = (ImageView) listItemView.findViewById(R.id.status_image);
+//        status.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), Integer.toString(position) , Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         TextView name = (TextView) listItemView.findViewById(R.id.name_staff_list);
         name.setText(currentItem.getName());

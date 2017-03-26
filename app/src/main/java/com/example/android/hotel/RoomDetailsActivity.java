@@ -1,6 +1,5 @@
 package com.example.android.hotel;
 
-import android.content.AsyncTaskLoader;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,7 +29,6 @@ import java.net.URL;
 
 import at.markushi.ui.CircleButton;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.util.Log.v;
 
 public class RoomDetailsActivity extends AppCompatActivity {
@@ -47,6 +45,10 @@ public class RoomDetailsActivity extends AppCompatActivity {
     private HttpURLConnection connection = null;
     private URL url;
     private String line;
+    private String received_name;
+    private String received_room;
+    private TextView name_text_view;
+    private TextView room_text_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +62,33 @@ public class RoomDetailsActivity extends AppCompatActivity {
             setContentView(R.layout.activity_room_details);
             new StringAsyncTask().execute();
 
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                    switch(radioGroup.getCheckedRadioButtonId())
+                    {
+                        case R.id.yes : Snackbar bar = Snackbar.make(detailsMain , "Room Service Ordered",Snackbar.LENGTH_LONG);
+                            bar.show();
+                            v("RoomDetailsActivity : ","yes");
+                            break;
+                        case R.id.no : v("RoomDetailsActivity : ","NO");
+                            break;
+                        case R.id.na : Log.v("RoomDetailsActivity : ","NA");
+                            break;
+                        default : Toast.makeText(RoomDetailsActivity.this, "Something Wrong!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+
         } else {
             setContentView(R.layout.activity_room_details_staff);
+            room_text_view = (TextView) findViewById(R.id.customer_room_no);
+            name_text_view = (TextView) findViewById(R.id.detail_name);
+            received_name = intent.getStringExtra("Name");
+            received_room = intent.getStringExtra("Room");
+            name_text_view.setText(received_name);
+            room_text_view.setText(received_room);
             radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         }
         mRoomImage = (ImageView) findViewById(R.id.room_image);
@@ -82,26 +109,6 @@ public class RoomDetailsActivity extends AppCompatActivity {
         Picasso.with(this).load("http://www.chaturmusafir.com/img/M-Resort-Hotel-Room-King-Suite.jpg").into(mRoomImage);
         Picasso.with(this).load("http://cdn.shopify.com/s/files/1/0257/6087/products/Grey_Single_Front_grande.png?v=1487375795").into(oval);
         mRoomImage.setAlpha(80);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                switch(radioGroup.getCheckedRadioButtonId())
-                {
-                    case R.id.yes : Snackbar bar = Snackbar.make(detailsMain , "Room Service Ordered",Snackbar.LENGTH_LONG);
-                                    bar.show();
-                        v("RoomDetailsActivity : ","yes");
-                        break;
-                    case R.id.no : v("RoomDetailsActivity : ","NO");
-                        break;
-                    case R.id.na : Log.v("RoomDetailsActivity : ","NA");
-                        break;
-                    default : Toast.makeText(RoomDetailsActivity.this, "Something Wrong!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
 
         //Picasso.with(this).load(R.drawable.close).into(customerStatus);
 

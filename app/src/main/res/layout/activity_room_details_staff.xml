@@ -30,6 +30,7 @@
         android:textStyle="bold"
         android:textColor="#212121"
         android:text="345"
+        android:id="@+id/customer_room_no"
         android:padding="10dp"
         android:textSize="25sp"/>
 

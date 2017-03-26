@@ -15,6 +15,7 @@
         android:textSize="28sp"
         android:padding="10dp"
         android:textAlignment="center"
+        android:textColor="#E0E0E0"
         android:id="@+id/room_no_staff_list"
         android:layout_height="wrap_content"/>
 
@@ -25,25 +26,26 @@
         android:padding="10dp"
         android:text="Hello"
         android:textSize="30sp"
+        android:textColor="#E0E0E0"
         android:fontFamily="sans-serif"
         android:gravity="center_vertical"
         android:layout_height="wrap_content"/>
 
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:background="#76FF03"
-        android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:layout_height="wrap_content">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="#76FF03"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:layout_height="wrap_content">-->
 
-        <ImageView
-            android:id="@+id/status_image"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_action_tick"
-            android:layout_centerInParent="true"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/status_image"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:src="@drawable/ic_action_tick"-->
+            <!--android:layout_centerInParent="true"/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 </LinearLayout>

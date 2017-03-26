@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -15,6 +17,7 @@ public class RoomListActivity extends AppCompatActivity {
     private ListView mRoomsList;
     private DetailAdapter mAdapter;
     private ArrayList<RoomDetail> roomList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +40,11 @@ public class RoomListActivity extends AppCompatActivity {
         mRoomsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView name = (TextView) view.findViewById(R.id.name_staff_list);
+                TextView room = (TextView) view.findViewById(R.id.room_no_staff_list);
                 Intent intent = new Intent(RoomListActivity.this , RoomDetailsActivity.class);
-                intent.putExtra("list","true");
+                intent.putExtra("Room",room.getText().toString());
+                intent.putExtra("Name",name.getText().toString());
                 startActivity(intent);
             }
         });
