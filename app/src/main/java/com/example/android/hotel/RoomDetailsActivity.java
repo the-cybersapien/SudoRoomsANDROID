@@ -13,9 +13,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +29,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import at.markushi.ui.CircleButton;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.util.Log.v;
 
 public class RoomDetailsActivity extends AppCompatActivity {
@@ -51,11 +57,11 @@ public class RoomDetailsActivity extends AppCompatActivity {
         received_key = intent.getStringExtra("key");
         if (received_key != null) {
             radioGroup.setVisibility(View.GONE);
-            setContentView(R.layout.activity_room_details_staff);
+            setContentView(R.layout.activity_room_details);
             new StringAsyncTask().execute();
 
         } else {
-            setContentView(R.layout.activity_room_details);
+            setContentView(R.layout.activity_room_details_staff);
             radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         }
         mRoomImage = (ImageView) findViewById(R.id.room_image);
@@ -184,7 +190,19 @@ public class RoomDetailsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-                Log.v("Activity" , s);
+            Log.v("Activity" , s);
+            try {
+                JSONObject main = new JSONObject(s);
+                String room = main.getString("Room");
+                String name_result = main.getString("Name");
+                TextView roomno = (TextView) findViewById(R.id.customer_room_no);
+                TextView name = (TextView) findViewById(R.id.detail_name);
+                roomno.setText(room);
+                name.setText(name_result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

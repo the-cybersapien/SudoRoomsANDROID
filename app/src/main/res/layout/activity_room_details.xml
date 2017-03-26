@@ -28,6 +28,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:textStyle="bold"
+        android:id="@+id/customer_room_no"
         android:textColor="#212121"
         android:text="345"
         android:padding="10dp"
