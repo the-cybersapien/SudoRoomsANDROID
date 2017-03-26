@@ -70,6 +70,12 @@ public class MainActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         text = input.getText().toString();
+                        if(text != null && text.length() == 6)
+                        {
+                            Intent intent = new Intent(MainActivity.this , RoomDetailsActivity.class);
+                            intent.putExtra("key",text);
+                            startActivity(intent);
+                        }
                     }
                 });
 
@@ -81,12 +87,6 @@ public class MainActivity extends Activity {
                 });
 
                 builder.create().show();
-
-                if(text != null && text.length() > 0)
-                {
-                    Intent intent = new Intent(MainActivity.this , RoomDetailsActivity.class);
-                    startActivity(intent);
-                }
 
             }
         });

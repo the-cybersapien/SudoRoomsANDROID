@@ -1,44 +1,103 @@
 package com.example.android.hotel;
 
+import android.content.AsyncTaskLoader;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.WindowManager;
+import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import at.markushi.ui.CircleButton;
+import static android.util.Log.v;
 
 public class RoomDetailsActivity extends AppCompatActivity {
 
     private ImageView mRoomImage;
     private ImageView oval;
-    private Uri received_uri;
+    private String received_key;
+    private CircleButton customerStatus;
+    private FrameLayout requestCircle;
+    private FrameLayout customerCircle;
+    private RadioGroup radioGroup;
+    private View detailsMain;
+    private String URL_MAIN = "http://192.168.2.214/sudorooms/customer/validateaccess.php?key=";
+    private HttpURLConnection connection = null;
+    private URL url;
+    private String line;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_room_details);
+        radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         Intent intent = getIntent();
-        received_uri = intent.getData();
-        if (received_uri != null) {
+        received_key = intent.getStringExtra("key");
+        if (received_key != null) {
+            radioGroup.setVisibility(View.GONE);
             setContentView(R.layout.activity_room_details_staff);
+            new StringAsyncTask().execute();
+
         } else {
             setContentView(R.layout.activity_room_details);
+            radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
         }
         mRoomImage = (ImageView) findViewById(R.id.room_image);
+        detailsMain = findViewById(R.id.details_main);
+        customerStatus = (CircleButton) findViewById(R.id.customer_status);
+        requestCircle = (FrameLayout) findViewById(R.id.customer_request_circle);
+        customerCircle = (FrameLayout) findViewById(R.id.customer_open_circle);
+        customerCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(customerCircle.getSolidColor() == getResources().getColor(R.color.unlocked))
+                    customerCircle.setBackgroundColor(getResources().getColor(R.color.locked));
+                else
+                    customerCircle.setBackgroundColor(getResources().getColor(R.color.unlocked));
+            }
+        });
         oval = (ImageView) findViewById(R.id.oval);
         Picasso.with(this).load("http://www.chaturmusafir.com/img/M-Resort-Hotel-Room-King-Suite.jpg").into(mRoomImage);
         Picasso.with(this).load("http://cdn.shopify.com/s/files/1/0257/6087/products/Grey_Single_Front_grande.png?v=1487375795").into(oval);
         mRoomImage.setAlpha(80);
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch(radioGroup.getCheckedRadioButtonId())
+                {
+                    case R.id.yes : Snackbar bar = Snackbar.make(detailsMain , "Room Service Ordered",Snackbar.LENGTH_LONG);
+                                    bar.show();
+                        v("RoomDetailsActivity : ","yes");
+                        break;
+                    case R.id.no : v("RoomDetailsActivity : ","NO");
+                        break;
+                    case R.id.na : Log.v("RoomDetailsActivity : ","NA");
+                        break;
+                    default : Toast.makeText(RoomDetailsActivity.this, "Something Wrong!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+        //Picasso.with(this).load(R.drawable.close).into(customerStatus);
 
     }
 
@@ -88,6 +147,44 @@ public class RoomDetailsActivity extends AppCompatActivity {
                 }
             }
             return null;
+        }
+    }
+
+    private class StringAsyncTask extends AsyncTask<Void, Void , String>
+    {
+
+        @Override
+        protected String doInBackground(Void... params) {
+            URL_MAIN = URL_MAIN + received_key;
+            try {
+                url = new URL(URL_MAIN);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setReadTimeout(15000);
+                connection.setConnectTimeout(10000);
+                connection.connect();
+                InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+                BufferedReader reader1 = new BufferedReader(reader);
+
+                StringBuilder builder = new StringBuilder();
+
+                while ((line = reader1.readLine()) != null){
+                    builder.append(line);
+                }
+
+                line = builder.toString();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return line;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+                Log.v("Activity" , s);
         }
     }
 

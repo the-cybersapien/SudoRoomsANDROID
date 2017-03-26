@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="#0B3B4B"
+    android:id="@+id/details_main"
     android:layout_height="match_parent"
     tools:context="com.example.android.hotel.RoomDetailsActivity">
 
@@ -51,42 +52,96 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"/>
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/detail_name"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<FrameLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<at.markushi.ui.CircleButton-->
+                <!--android:layout_width="128dip"-->
+                <!--android:layout_height="128dip"-->
+                <!--android:src="@drawable/ic_action_tick"-->
+                <!--app:cb_color="#D81B60"-->
+                <!--android:layout_gravity="center"-->
+                <!--app:cb_pressedRingWidth="16dip"/>-->
+
+        <!--</FrameLayout>-->
+
+        <!--<FrameLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<at.markushi.ui.CircleButton-->
+                <!--android:layout_width="128dip"-->
+                <!--android:layout_height="128dip"-->
+                <!--android:src="@drawable/ic_action_tick"-->
+                <!--app:cb_color="#99CC00"-->
+                <!--android:layout_gravity="center"-->
+                <!--app:cb_pressedRingWidth="16dip"/>-->
+
+        <!--</FrameLayout>-->
+
+    <!--</LinearLayout>-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_below="@id/detail_name"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="20dp">
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/customer_request_circle"
             android:layout_height="match_parent">
 
             <at.markushi.ui.CircleButton
                 android:layout_width="128dip"
                 android:layout_height="128dip"
-                android:src="@drawable/ic_action_tick"
+                android:id="@+id/request_servicing"
                 app:cb_color="#D81B60"
+                android:clickable="true"
+                android:foreground="?android:selectableItemBackground"
+                android:src="@drawable/request"
                 android:layout_gravity="center"
                 app:cb_pressedRingWidth="16dip"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </FrameLayout>
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:id="@+id/customer_open_circle"
             android:layout_height="match_parent">
 
             <at.markushi.ui.CircleButton
                 android:layout_width="128dip"
                 android:layout_height="128dip"
-                android:src="@drawable/ic_action_tick"
+                android:id="@+id/customer_status"
+                android:src="@drawable/key"
+                android:clickable="true"
+                android:foreground="?android:selectableItemBackground"
                 app:cb_color="#99CC00"
                 android:layout_gravity="center"
                 app:cb_pressedRingWidth="16dip"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </FrameLayout>
+
 
     </LinearLayout>
 
